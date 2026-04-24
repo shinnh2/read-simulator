@@ -1,0 +1,196 @@
+/* ────────────────────── Reading Page ────────────────────── */
+
+.reading-page__bg {
+  position: absolute;
+  inset: 0;
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  filter: brightness(0.85);
+  transition: background-image 0.6s ease;
+
+}
+
+/* ─── Glass Timer Card ─── */
+.timer-card {
+  position: fixed;
+  left:calc(50% - min(420px, 90vw)/2);
+  top: 16px;
+  z-index: 10;
+  width: 100%;
+  border-radius: var(--radius-lg);
+  width: min(420px, 90vw);
+  background: var(--glass-bg);
+  border: 1px solid var(--glass-border);
+  backdrop-filter: var(--glass-blur);
+  -webkit-backdrop-filter: var(--glass-blur);
+  box-shadow: var(--glass-shadow);
+  padding: 32px 24px;
+  animation: fadeIn 0.5s ease;
+  color:var(--glass-font-color)
+}
+
+.timer-card__no-book {
+  color:var(--glass-font-color)
+}
+
+.timer-card__no-book p {
+  font-size: 14px;
+}
+
+.timer-card__timer-info-wrap{
+  display: flex;
+  gap: 16px;
+  align-items: center;
+  margin-bottom: 16px;
+}
+
+.timer-card__info{
+  flex:1;
+}
+
+.timer-card__book-img{
+  width: 48px;
+  object-fit: cover;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+}
+
+.timer-card__title {
+  line-height: 24px;
+  font-size: 18px;
+  font-weight: var(--font-weight-bold);
+  color:var(--glass-font-color)
+}
+
+.timer-card__clock {
+  line-height: 30px;
+  font-family: var(--font-sans);
+  font-size: 16px;
+  font-weight: var(--font-weight-medium);
+  color:var(--glass-font-color);
+  text-shadow: 0 0 40px rgba(255,255,255,0.3);
+}
+
+.timer-card__clock.running {
+  animation: glow 2s ease-in-out infinite alternate;
+}
+
+@keyframes glow {
+  from { text-shadow: 0 0 20px rgba(255,255,255,0.2); }
+  to   { text-shadow: 0 0 50px rgba(255,255,255,0.5); }
+}
+
+.timer-card__controls {
+  display: flex;
+  gap: 24px;
+  justify-content: center;
+  align-items: center;
+}
+
+.btn-timer {
+  width: auto;
+  padding: 8px 16px;
+  border-radius: var(--radius-round);
+  font-size: 14px;
+  color:var(--glass-font-color);
+  display: flex; align-items: center; justify-content: center;
+  transition: background var(--transition), transform var(--transition);
+}
+
+.btn-timer:hover {
+  background: rgba(255,255,255,0.2);
+  transform: scale(1.05);
+}
+
+.btn-timer.primary {
+  width: 32px; 
+  height: 32px;
+  padding: 0;
+  font-size: 14px;
+}
+
+.btn-timer:disabled {
+  opacity: 0.2;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.btn-timer.save{
+  border-radius: var(--radius-lg);
+  border:1px solid var(--glass-border);
+  background: rgba(255, 255, 255, 0.34);
+  color:var(--font-color);
+}
+
+/* ─── Book Selector ─── */
+.book-selector {
+  position: fixed;
+  top: calc(86px + 16px + 16px);
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 20;
+  width: min(420px, 90vw);
+}
+
+.book-selector__toggle {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  border: 1px solid var(--glass-border);
+  background: var(--glass-bg);
+  backdrop-filter: var(--glass-blur);
+  -webkit-backdrop-filter: var(--glass-blur);
+  box-shadow: var(--glass-shadow);
+  border-radius: var(--radius-lg);
+  padding: 12px 16px;
+  color: var(--glass-font-color);
+  text-transform: uppercase;
+  text-align: left;
+  transition: all var(--transition);
+}
+
+.book-selector__icon{
+  display: block;
+  width: 24px; height: 24px;
+  color: var(--glass-font-color);
+}
+
+.book-selector__toggle:hover { background-color: var(--bg); color:var(--font-color); }
+.book-selector__toggle:hover .book-selector__icon{ color:var(--font-color); }
+
+.book-selector__dropdown {
+  position: absolute;
+  top: calc(100% + 8px);
+  left: 0; right: 0;
+  max-height: 260px;
+  animation: fadeIn 0.2s ease;
+}
+.book-selector__dropdown.list{
+  /* background: var(--glass-bg); */
+  background: var(--bg);
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--glass-border);
+  backdrop-filter: var(--glass-blur);
+  -webkit-backdrop-filter: var(--glass-blur);
+  box-shadow: var(--glass-shadow);  
+}
+/* .book-selector__dropdown.list .list-item{
+  border-bottom: 1px solid var(--border-color);
+}
+.book-selector__dropdown.list .list-item .list-item__title{
+  color:var(--glass-font-color);  
+}
+.book-selector__dropdown.list .list-item .list-item__description{
+  color:var(--glass-font-color);  
+}
+
+.book-selector__dropdown.list .list-item:hover{
+  background: var(--bg);
+}
+.book-selector__dropdown.list .list-item:hover .list-item__title{
+  color:var(--font-color);  
+}
+.book-selector__dropdown.list .list-item:hover .list-item__description{
+  color:var(--font-color);  
+} */
