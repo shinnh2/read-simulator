@@ -26,6 +26,7 @@ const ReadingPage = () => {
   const [selectorOpen, setSelectorOpen] = useState(false)
   const [allBooks, setAllBooks] = useState([])
   const [saving, setSaving] = useState(false)
+  const baseUrl=import.meta.env.BASE_URL
 
   useEffect(() => {
     const loadBooks = async () => {
@@ -83,7 +84,7 @@ const ReadingPage = () => {
   }
 
   const bgStyle = {
-    backgroundImage: `url(/images/${settings.bgImage})`,
+    backgroundImage: `url(${baseUrl}images/${settings.bgImage})`,  
   }
 
   return (
