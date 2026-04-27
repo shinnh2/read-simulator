@@ -2,7 +2,7 @@
 import { useState, useEffect } from 'react'
 import { useApp } from '../AppContext'
 import { getLogs } from '../utils/firestore'
-// import '../styles/MyPage.css'
+import '../styles/MyPage.css'
 
 // 로컬 /public/images/ 폴더에 있는 배경 이미지 목록
 // 실제 파일명에 맞게 수정하세요
@@ -11,7 +11,10 @@ const BG_IMAGES = [
   { file: 'bg2.png', label: '모던 북카페' },
   { file: 'bg3.png', label: '한옥 북카페' },
   { file: 'bg4.png', label: '인더스트리얼 카페' },
+  { file: 'bg5.png', label: '유럽 감성 북카페' },
+  { file: 'bg6.png', label: '도서관 느낌 북카페' },
   { file: 'bg7.png', label: '유럽 감성 서점' },
+  { file: 'bg8.png', label: '빈티지 북카페 아지트' },
 ]
 
 const formatDuration = (s) => {
@@ -152,15 +155,14 @@ const MyPage = () => {
         {logs.length === 0 ? (
           <div className="empty-state">아직 독서 기록이 없습니다</div>
         ) : (
-          <div className="log-list">
+          <div className="log-list list">
             {logs.map(log => (
-              <div key={log.id} className="log-item">
-                <div className="log-item__dot" />
-                <div className="log-item__content">
-                  <div className="log-item__title">{log.bookTitle}</div>
-                  <div className="log-item__duration">{formatDuration(log.duration)}</div>
+              <div key={log.id} className="list-item">
+                <div className="list-item__info">
+                  <div className="list-item__title">{log.bookTitle}</div>
+                  <div className="list-item__description">{formatDuration(log.duration)}</div>
                 </div>
-                <div className="log-item__time">{formatDate(log.createdAt)}</div>
+                <div className="list-item__description time">{formatDate(log.createdAt)}</div>
               </div>
             ))}
           </div>
