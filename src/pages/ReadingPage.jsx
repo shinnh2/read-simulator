@@ -21,8 +21,8 @@ const formatTotal = (s) => {
 }
 
 const ReadingPage = () => {
-  const { settings, activeBook, setActiveBook } = useApp()
-  const { seconds, running, start, pause, reset, format } = useTimer()
+  const { settings, activeBook, setActiveBook, timer } = useApp()
+  const { seconds, running, start, pause, reset, format } = timer
   const [selectorOpen, setSelectorOpen] = useState(false)
   const [allBooks, setAllBooks] = useState([])
   const [saving, setSaving] = useState(false)
