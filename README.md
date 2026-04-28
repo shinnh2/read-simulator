@@ -1,5 +1,6 @@
 # 📖 READ SIMULATOR — 독서 기록 앱
 READ SIMULATOR는 책을 검색하여 나만의 가상 책장을 채워넣고, 타이머로 책을 읽을 수 있게 해주는 독서 기록 앱입니다. 
+- 바로가기: https://shinnh2.github.io/read-simulator/
 
 ## 1. 소개
 <img width="auto" height="480px" alt="image" src="https://github.com/user-attachments/assets/b4b5eca5-5d67-496f-bf1a-4012642b0b3b" />
