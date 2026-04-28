@@ -1,31 +1,40 @@
 # 📖 READ SIMULATOR — 독서 기록 앱
 READ SIMULATOR는 책을 검색하여 나만의 가상 책장을 채워넣고, 타이머로 책을 읽을 수 있게 해주는 독서 기록 앱입니다. 
 
-## 읽기 - 원하는 독서 공간을 배경으로 책을 읽고, 시간을 기록하세요.
+## 1. 소개
+<img width="auto" height="480px" alt="image" src="https://github.com/user-attachments/assets/b4b5eca5-5d67-496f-bf1a-4012642b0b3b" />
+<img width="auto" height="480px" alt="image" src="https://github.com/user-attachments/assets/20183cec-4ffc-4782-b9ef-bebd07177cc4" />
+<img width="auto" height="480px" alt="image" src="https://github.com/user-attachments/assets/d76f41b4-561b-43af-994d-7d84cd8729e7" />
+
+### 읽기 - 원하는 독서 공간을 배경으로 책을 읽고, 시간을 기록하세요.
 원하는 감성의 독서 공간을 배경으로 두고, 원하는 책을 고르세요.
 책을 고르면 시작 버튼을 눌러 책을 읽는 동안의 시간을 기록할 수 있습니다.
 저장을 누르면 내가 어떤 책을 얼마나 읽었는지 기록으로 남겨둘 수 있고,
 책 덮기를 클릭하면 다른 책을 가져와서 읽을 수 있습니다.
 
-## 서재 - 내가 원하는 책으로 나만의 책장을 채워보세요.
+### 서재 - 내가 원하는 책으로 나만의 책장을 채워보세요.
 최대 10개의 책장을 만들고 한 책장에 20개의 책으로 채울 수 있습니다.
 원하는 책을 편하게 검색해서 책장에 등록해보세요.
 어떤 책이 있는지 검색해보는 재미도 있고, 나만의 서재를 만들어가는 재미도 느낄 수 있습니다.
 
-## 내 정보 - 저장된 기록을 보고 원하는대로 설정해보세요.
+### 내 정보 - 저장된 기록을 보고 원하는대로 설정해보세요.
+구글 로그인을 통해 앱을 시작하고 기록을 저장할 수 있습니다. 
 내가 책을 얼마나 읽고 몇 권을 읽었는지 한 눈에 볼 수 있습니다.
 독서 기록을 통해 저장된 내용들을 볼 수도 있어요.
 또한 책을 읽을 때의 배경을 내가 원하는 느낌의 장소로 바꿔보세요.
 
----
+<br/>
+<br/>
+<br/>
 
-## 개발 정보
+## 2. 개발 정보
 
 ### 주요 기능
 독서 타이머
 도서 검색
 독서 기록 통계
 배경 변경
+구글 로그인 후 사용 가능
 
 ### 기술 스택
 - Framework: React 18 + Vite
@@ -120,36 +129,4 @@ npm run deploy
 ### Firebase Authorized Domains 추가
 1. Firebase Console → **Authentication > Settings > Authorized domains**
 2. `<USERNAME>.github.io` 추가
-
-
-## Firestore 데이터 구조
-
-```
-shelves/
-  {shelfId}/
-    name: string
-    createdAt: timestamp
-
-books/
-  {bookId}/
-    shelfId: string
-    title: string
-    author: string
-    coverUrl: string
-    totalReadSeconds: number
-    createdAt: timestamp
-
-logs/
-  {logId}/
-    bookId: string
-    bookTitle: string
-    bookAuthor: string
-    duration: number  (seconds)
-    createdAt: timestamp
-
-settings/
-  user/
-    username: string
-    bgImage: string
-```
 
