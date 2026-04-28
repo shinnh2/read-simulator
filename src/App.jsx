@@ -5,6 +5,7 @@ import Nav from './components/Nav'
 import ReadingPage from './pages/ReadingPage'
 import LibraryPage from './pages/LibraryPage'
 import MyPage from './pages/MyPage'
+import LoginPage from './pages/LoginPage'
 import './styles/global.css'
 
 const LoadingScreen = () => (
@@ -16,9 +17,15 @@ const LoadingScreen = () => (
 )
 
 const AppContent = () => {
-  const { loading } = useApp()
+  const { loading, user } = useApp()
+
+  // Auth 확인 중
   if (loading) return <LoadingScreen />
 
+  // 로그인 안 된 상태
+  if (!user) return <LoginPage />
+
+  // 로그인 완료
   return (
     <>
       <Routes>

@@ -4,8 +4,6 @@ import { useApp } from '../AppContext'
 import { getLogs } from '../utils/firestore'
 import '../styles/MyPage.css'
 
-// 로컬 /public/images/ 폴더에 있는 배경 이미지 목록
-// 실제 파일명에 맞게 수정하세요
 const BG_IMAGES = [
   { file: 'bg1.png', label: '한낮의 식물 도서관' },
   { file: 'bg2.png', label: '모던 북카페' },
@@ -33,7 +31,7 @@ const formatDate = (ts) => {
 }
 
 const MyPage = () => {
-  const { settings, updateSettings } = useApp()
+  const { settings, updateSettings, user, logout } = useApp()  // ← logout 추가
   const [logs, setLogs] = useState([])
   const [username, setUsername] = useState(settings.username || '독서가')
   const [editingName, setEditingName] = useState(false)
@@ -41,9 +39,9 @@ const MyPage = () => {
   const currentBg = BG_IMAGES.find(bg => bg.file === settings.bgImage)
 
   useEffect(() => {
-    getLogs().then(setLogs).catch(console.error)
-    
-  }, [])
+    if (!user) return                                    // ← 추가
+    getLogs(user.uid).then(setLogs).catch(console.error) // ← uid 추가
+  }, [user])                                             // ← 의존성 추가
 
   useEffect(() => {
     setUsername(settings.username || '독서가')
@@ -71,7 +69,10 @@ const MyPage = () => {
       <div className="header">
         <div className="profile-header__content">
           <div className="profile-header__avatar">
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 -960 960 960"><path d="M381.04-533.35Q340-574.38 340-632.31q0-57.92 41.04-98.96 41.04-41.04 98.96-41.04 57.92 0 98.96 41.04Q620-690.23 620-632.31q0 57.93-41.04 98.96-41.04 41.04-98.96 41.04-57.92 0-98.96-41.04ZM180-187.69v-88.93q0-29.38 15.96-54.42 15.96-25.04 42.66-38.5 59.3-29.07 119.65-43.61 60.35-14.54 121.73-14.54t121.73 14.54q60.35 14.54 119.65 43.61 26.7 13.46 42.66 38.5Q780-306 780-276.62v88.93H180Zm60-60h480v-28.93q0-12.15-7.04-22.5-7.04-10.34-19.11-16.88-51.7-25.46-105.42-38.58Q534.7-367.69 480-367.69q-54.7 0-108.43 13.11-53.72 13.12-105.42 38.58-12.07 6.54-19.11 16.88-7.04 10.35-7.04 22.5v28.93Zm296.5-328.12q23.5-23.5 23.5-56.5t-23.5-56.5q-23.5-23.5-56.5-23.5t-56.5 23.5q-23.5 23.5-23.5 56.5t23.5 56.5q23.5 23.5 56.5 23.5t56.5-23.5Zm-56.5-56.5Zm0 384.62Z"/></svg>
+            {user?.photoURL
+              ? <img src={user.photoURL} alt="" style={{ width:'100%', height:'100%', borderRadius:'50%', objectFit:'cover' }} />
+              : <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 -960 960 960"><path d="M381.04-533.35Q340-574.38 340-632.31q0-57.92 41.04-98.96 41.04-41.04 98.96-41.04 57.92 0 98.96 41.04Q620-690.23 620-632.31q0 57.93-41.04 98.96-41.04 41.04-98.96 41.04-57.92 0-98.96-41.04ZM180-187.69v-88.93q0-29.38 15.96-54.42 15.96-25.04 42.66-38.5 59.3-29.07 119.65-43.61 60.35-14.54 121.73-14.54t121.73 14.54q60.35 14.54 119.65 43.61 26.7 13.46 42.66 38.5Q780-306 780-276.62v88.93H180Zm60-60h480v-28.93q0-12.15-7.04-22.5-7.04-10.34-19.11-16.88-51.7-25.46-105.42-38.58Q534.7-367.69 480-367.69q-54.7 0-108.43 13.11-53.72 13.12-105.42 38.58-12.07 6.54-19.11 16.88-7.04 10.35-7.04 22.5v28.93Zm296.5-328.12q23.5-23.5 23.5-56.5t-23.5-56.5q-23.5-23.5-56.5-23.5t-56.5 23.5q-23.5 23.5-23.5 56.5t23.5 56.5q23.5 23.5 56.5 23.5t56.5-23.5Zm-56.5-56.5Zm0 384.62Z"/></svg>
+            }
           </div>
           <div className="page__title">{settings.username || '독서가'}</div>
           <div className="page__description">READ SIMULATOR</div>
@@ -121,7 +122,7 @@ const MyPage = () => {
           ) : (
             <>
               <button className="btn-name-action" title="수정" onClick={() => setEditingName(true)}>
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 -960 960 960"><path d="M200-200h50.46l409.46-409.46-50.46-50.46L200-250.46V-200Zm-60 60v-135.38l527.62-527.39q9.07-8.24 20.03-12.73 10.97-4.5 23-4.5t23.3 4.27q11.28 4.27 19.97 13.58l48.85 49.46q9.31 8.69 13.27 20 3.96 11.31 3.96 22.62 0 12.07-4.12 23.03-4.12 10.97-13.11 20.04L275.38-140H140Zm620.38-570.15-50.23-50.23 50.23 50.23Zm-126.13 75.9-24.79-25.67 50.46 50.46-25.67-24.79Z"/></svg>              
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 -960 960 960"><path d="M200-200h50.46l409.46-409.46-50.46-50.46L200-250.46V-200Zm-60 60v-135.38l527.62-527.39q9.07-8.24 20.03-12.73 10.97-4.5 23-4.5t23.3 4.27q11.28 4.27 19.97 13.58l48.85 49.46q9.31 8.69 13.27 20 3.96 11.31 3.96 22.62 0 12.07-4.12 23.03-4.12 10.97-13.11 20.04L275.38-140H140Zm620.38-570.15-50.23-50.23 50.23 50.23Zm-126.13 75.9-24.79-25.67 50.46 50.46-25.67-24.79Z"/></svg>
               </button>
               <span style={{ fontFamily: 'var(--font-serif)', fontSize: '1rem' }}>
                 {settings.username || '독서가'}
@@ -167,6 +168,11 @@ const MyPage = () => {
             ))}
           </div>
         )}
+      </div>
+
+      {/* Logout */}
+      <div className="my-page__section">
+        <button className="btn-logout" onClick={logout}>로그아웃</button>
       </div>
     </div>
   )

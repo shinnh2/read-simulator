@@ -1,5 +1,6 @@
 // src/pages/LibraryPage.jsx
 import { useState, useEffect, useRef } from 'react'
+import { useApp } from '../AppContext'  // ← 추가
 import {
   getShelves, addShelf, updateShelf, deleteShelf,
   getBooksByShelf, addBook, deleteBook
@@ -16,12 +17,12 @@ const formatTime = (s) => {
 }
 
 // ─── 카카오 도서 검색 모달 ────────────────────────────
-const BookSearchModal = ({ shelfId, onClose, onAdded }) => {
+const BookSearchModal = ({ uid, shelfId, onClose, onAdded }) => {  // ← uid 추가
   const [query, setQuery] = useState('')
   const [results, setResults] = useState([])
   const [searching, setSearching] = useState(false)
-  const [adding, setAdding] = useState(null) // 추가 중인 bookId
-  const [added, setAdded] = useState(new Set()) // 이미 추가된 항목
+  const [adding, setAdding] = useState(null)
+  const [added, setAdded] = useState(new Set())
   const [error, setError] = useState('')
   const [page, setPage] = useState(1)
   const [isEnd, setIsEnd] = useState(false)
@@ -67,7 +68,7 @@ const BookSearchModal = ({ shelfId, onClose, onAdded }) => {
     const bookId = book.isbn
     setAdding(bookId)
     try {
-      await addBook({
+      await addBook(uid, {  // ← uid 추가
         shelfId,
         title: book.title,
         author: book.authors?.join(', ') || '',
@@ -76,7 +77,7 @@ const BookSearchModal = ({ shelfId, onClose, onAdded }) => {
         coverUrl: book.thumbnail || '',
         description: book.contents || '',
         datetime: book.datetime || '',
-        url:book.url || '',
+        url: book.url || '',
       })
       setAdded(prev => new Set([...prev, bookId]))
       onAdded()
@@ -93,7 +94,6 @@ const BookSearchModal = ({ shelfId, onClose, onAdded }) => {
         <div className="modal__handle" />
         <div className="modal__title">도서 검색</div>
 
-        {/* 검색창 */}
         <div className="search-bar">
           <input
             ref={inputRef}
@@ -115,7 +115,6 @@ const BookSearchModal = ({ shelfId, onClose, onAdded }) => {
 
         {error && <div className="search-error">{error}</div>}
 
-        {/* 결과 */}
         <div className="search-results">
           {results.length === 0 && !searching && (
             <div className="empty-state">
@@ -151,18 +150,17 @@ const BookSearchModal = ({ shelfId, onClose, onAdded }) => {
                   disabled={isAdding || isAdded}
                 >
                   {isAdding ? 
-                  (<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 -960 960 960"><path d="M249.23-420q-24.75 0-42.37-17.63-17.63-17.62-17.63-42.37 0-24.75 17.63-42.37Q224.48-540 249.23-540q24.75 0 42.38 17.63 17.62 17.62 17.62 42.37 0 24.75-17.62 42.37Q273.98-420 249.23-420ZM480-420q-24.75 0-42.37-17.63Q420-455.25 420-480q0-24.75 17.63-42.37Q455.25-540 480-540q24.75 0 42.37 17.63Q540-504.75 540-480q0 24.75-17.63 42.37Q504.75-420 480-420Zm230.77 0q-24.75 0-42.38-17.63-17.62-17.62-17.62-42.37 0-24.75 17.62-42.37Q686.02-540 710.77-540q24.75 0 42.37 17.63 17.63 17.62 17.63 42.37 0 24.75-17.63 42.37Q735.52-420 710.77-420Z"/></svg>) 
-                  : ( 
-                      isAdded ? 
-                        (<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 -960 960 960"><path d="M382-253.85 168.62-467.23 211.38-510 382-339.38 748.62-706l42.76 42.77L382-253.85Z"/></svg>) 
-                        : (<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 -960 960 960"><path d="M450-450H220v-60h230v-230h60v230h230v60H510v230h-60v-230Z"/></svg>) 
-                    )}
+                    (<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 -960 960 960"><path d="M249.23-420q-24.75 0-42.37-17.63-17.63-17.62-17.63-42.37 0-24.75 17.63-42.37Q224.48-540 249.23-540q24.75 0 42.38 17.63 17.62 17.62 17.62 42.37 0 24.75-17.62 42.37Q273.98-420 249.23-420ZM480-420q-24.75 0-42.37-17.63Q420-455.25 420-480q0-24.75 17.63-42.37Q455.25-540 480-540q24.75 0 42.37 17.63Q540-504.75 540-480q0 24.75-17.63 42.37Q504.75-420 480-420Zm230.77 0q-24.75 0-42.38-17.63-17.62-17.62-17.62-42.37 0-24.75 17.62-42.37Q686.02-540 710.77-540q24.75 0 42.37 17.63 17.63 17.62 17.63 42.37 0 24.75-17.63 42.37Q735.52-420 710.77-420Z"/></svg>) 
+                    : ( 
+                        isAdded ? 
+                          (<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 -960 960 960"><path d="M382-253.85 168.62-467.23 211.38-510 382-339.38 748.62-706l42.76 42.77L382-253.85Z"/></svg>) 
+                          : (<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 -960 960 960"><path d="M450-450H220v-60h230v-230h60v230h230v60H510v230h-60v-230Z"/></svg>) 
+                      )}
                 </button>
               </div>
             )
           })}
 
-          {/* 더 보기 */}
           {results.length > 0 && !isEnd && (
             <button
               className="btn-load-more"
@@ -200,7 +198,7 @@ const BookDetailModal = ({ book, onClose, onDelete }) => {
             <div className="book-detail__title">{book.title}</div>
             <div className="book-detail__author">{book.author}</div>
             <div className="book-detail__stat">{book.publisher}</div>
-            <div className="book-detail__url"><a href={book.url} target="_blank" title="새 창 열림">더보기</a></div>
+            <div className="book-detail__url"><a href={book.url} target="_blank" rel="noopener noreferrer" title="새 창 열림">더보기</a></div>
           </div>
         </div>
         <div className="book-detail__time">
@@ -229,6 +227,8 @@ const BookDetailModal = ({ book, onClose, onDelete }) => {
 
 // ─── Main Component ───────────────────────────────────
 const LibraryPage = () => {
+  const { user } = useApp()  // ← 추가
+  const uid = user?.uid      // ← 추가
   const [shelves, setShelves] = useState([])
   const [selectedShelf, setSelectedShelf] = useState(null)
   const [books, setBooks] = useState([])
@@ -241,13 +241,14 @@ const LibraryPage = () => {
   const [loading, setLoading] = useState(true)
 
   const loadShelves = async () => {
+    if (!uid) return  // ← 추가
     setLoading(true)
     try {
-      const data = await getShelves()
+      const data = await getShelves(uid)  // ← uid 추가
       setShelves(data)
       const counts = {}
       await Promise.all(data.map(async (s) => {
-        const bks = await getBooksByShelf(s.id)
+        const bks = await getBooksByShelf(uid, s.id)  // ← uid 추가
         counts[s.id] = bks.length
       }))
       setShelfCounts(counts)
@@ -259,15 +260,16 @@ const LibraryPage = () => {
   }
 
   const loadBooks = async (shelf) => {
+    if (!uid) return  // ← 추가
     try {
-      const data = await getBooksByShelf(shelf.id)
+      const data = await getBooksByShelf(uid, shelf.id)  // ← uid 추가
       setBooks(data)
     } catch (e) {
       console.error(e)
     }
   }
 
-  useEffect(() => { loadShelves() }, [])
+  useEffect(() => { loadShelves() }, [uid])  // ← uid 의존성 추가
 
   const handleSelectShelf = (shelf) => {
     setSelectedShelf(shelf)
@@ -276,25 +278,25 @@ const LibraryPage = () => {
 
   const handleAddShelf = async () => {
     if (!newShelfName.trim() || shelves.length >= 10) return
-    await addShelf(newShelfName.trim())
+    await addShelf(uid, newShelfName.trim())  // ← uid 추가
     setNewShelfName('')
     loadShelves()
   }
 
   const handleRenameShelf = async (id) => {
     if (!editingShelfName.trim()) return
-    await updateShelf(id, { name: editingShelfName.trim() })
+    await updateShelf(uid, id, { name: editingShelfName.trim() })  // ← uid 추가
     setEditingShelfId(null)
     loadShelves()
-  }  
+  }
 
   const handleDeleteShelf = async (id) => {
-    await deleteShelf(id)
+    await deleteShelf(uid, id)  // ← uid 추가
     loadShelves()
   }
 
   const handleDeleteBook = async (id) => {
-    await deleteBook(id)
+    await deleteBook(uid, id)  // ← uid 추가
     if (selectedShelf) loadBooks(selectedShelf)
   }
 
@@ -305,15 +307,13 @@ const LibraryPage = () => {
 
   return (
     <div className="page library-page fade-in">
-      {/* header */}
       <div className="header">
         <div>
           <div className="page__title">서재</div>
-           <div className="page__description">책장은 최대 10개, 책장 1개당 책은 최대 20권까지 보관할 수 있습니다.</div>
+          <div className="page__description">책장은 최대 10개, 책장 1개당 책은 최대 20권까지 보관할 수 있습니다.</div>
         </div>
       </div>
 
-      {/* Breadcrumb */}
       <div className="breadcrumb">
         <span
           className={`breadcrumb__item ${!selectedShelf ? 'active' : ''}`}
@@ -327,23 +327,18 @@ const LibraryPage = () => {
         )}
       </div>
 
-      {/* Main Content */}
       <main className='container'>
         {!selectedShelf ? (
-          // 책장 목록 페이지
           <>
-            {/* 책장 리스트 */}
             {loading ? (
               <div className="empty-state">불러오는 중...</div>
             ) : (
               <div className="shelf-list list">
                 {shelves.map(shelf => (
                   <div key={shelf.id} className="list-item" onClick={() => handleSelectShelf(shelf)}>
-                    {/* 책장 아이콘 */}
                     <div className="list-item__icon">
                       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 -960 960 960"><path d="M140-58.08v-843.46h60v81.93h560v-81.93h60v843.46h-60V-140H200v81.92h-60ZM200-520h92.31v-155.38h215.38V-520H760v-239.62H200V-520Zm0 320h252.31v-155.38h215.38V-200H760v-260H200v260Zm152.31-320h95.38v-95.39h-95.38V-520Zm160 320h95.38v-95.39h-95.38V-200Zm-160-320h95.38-95.38Zm160 320h95.38-95.38Z"/></svg>
                     </div>
-                    {/* 책 정보 */}
                     <div className="list-item__info">
                       {editingShelfId === shelf.id ? (
                         <input
@@ -362,37 +357,18 @@ const LibraryPage = () => {
                       )}
                       <span className="list-item__description">{shelfCounts[shelf.id] ?? 0}권</span>
                     </div>
-                    {/* 수정 버튼 */}
                     {editingShelfId === shelf.id ? (
-                      <button
-                        className="btn-shelf"
-                        onClick={e => { e.stopPropagation(); handleRenameShelf(shelf.id) }}
-                        title="책장 이름 수정 완료"
-                      >
+                      <button className="btn-shelf" onClick={e => { e.stopPropagation(); handleRenameShelf(shelf.id) }} title="책장 이름 수정 완료">
                         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 -960 960 960"><path d="M382-253.85 168.62-467.23 211.38-510 382-339.38 748.62-706l42.76 42.77L382-253.85Z"/></svg>
                       </button>
                     ) : (
-                      <button
-                        className="btn-shelf"
-                        onClick={e => {
-                          e.stopPropagation()
-                          setEditingShelfId(shelf.id)
-                          setEditingShelfName(shelf.name)
-                        }}
-                        title="책장 이름 수정"
-                      >
+                      <button className="btn-shelf" onClick={e => { e.stopPropagation(); setEditingShelfId(shelf.id); setEditingShelfName(shelf.name) }} title="책장 이름 수정">
                         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 -960 960 960"><path d="M200-200h50.46l409.46-409.46-50.46-50.46L200-250.46V-200Zm-60 60v-135.38l527.62-527.39q9.07-8.24 20.03-12.73 10.97-4.5 23-4.5t23.3 4.27q11.28 4.27 19.97 13.58l48.85 49.46q9.31 8.69 13.27 20 3.96 11.31 3.96 22.62 0 12.07-4.12 23.03-4.12 10.97-13.11 20.04L275.38-140H140Zm620.38-570.15-50.23-50.23 50.23 50.23Zm-126.13 75.9-24.79-25.67 50.46 50.46-25.67-24.79Z"/></svg>
                       </button>
-                    )}                    
-                    {/* 삭제 버튼 */}
-                    <button
-                      className="btn-shelf"
-                      onClick={e => { e.stopPropagation(); handleDeleteShelf(shelf.id) }}
-                      title="삭제"
-                    >
+                    )}
+                    <button className="btn-shelf" onClick={e => { e.stopPropagation(); handleDeleteShelf(shelf.id) }} title="삭제">
                       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 -960 960 960"><path d="M292.31-140q-29.92 0-51.12-21.19Q220-182.39 220-212.31V-720h-40v-60h180v-35.38h240V-780h180v60h-40v507.69Q740-182 719-161q-21 21-51.31 21H292.31ZM680-720H280v507.69q0 5.39 3.46 8.85t8.85 3.46h375.38q4.62 0 8.46-3.85 3.85-3.84 3.85-8.46V-720ZM376.16-280h59.99v-360h-59.99v360Zm147.69 0h59.99v-360h-59.99v360ZM280-720v520-520Z"/></svg>
-                    </button>     
-                    {/* 책장 바로가기 아이콘 */}
+                    </button>
                     <div className="arrow-icon">
                       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 -960 960 960"><path d="M665.08-450H180v-60h485.08L437.23-737.85 480-780l300 300-300 300-42.77-42.15L665.08-450Z"/></svg>
                     </div>
@@ -400,7 +376,6 @@ const LibraryPage = () => {
                 ))}
               </div>
             )}
-            {/* 책장 추가 */}
             <div className='input-set-box add-shelf-form-box'>
               <label htmlFor='newShelf' className='input-label'>책장 추가</label>
               <div className="input-wrap">
@@ -417,10 +392,9 @@ const LibraryPage = () => {
                 />
                 <button className="button-primary" onClick={handleAddShelf}>추가</button>
               </div>    
-            </div>            
+            </div>
           </>
         ) : (
-          // 책장 상세 페이지
           <>
             <div className="page__sub-title">{selectedShelf.name}</div>
             <div className="library-page__description">{books.length}/20&nbsp;권</div>
@@ -456,9 +430,9 @@ const LibraryPage = () => {
         )}
       </main>
 
-      {/* Modals */}
       {showAddBook && selectedShelf && (
         <BookSearchModal
+          uid={uid}  // ← 추가
           shelfId={selectedShelf.id}
           onClose={() => setShowAddBook(false)}
           onAdded={handleBooksRefresh}
