@@ -1,10 +1,43 @@
-# 📖 READER — 그레이스케일 독서 앱
+# 📖 READ SIMULATOR — 독서 기록 앱
 
-Black & White 테마의 미니멀 독서 기록 앱. React + Vite + Firebase(Firestore) + gh-pages.
+소개
+READ SIMULATOR는 책을 검색하여 나만의 가상 책장을 채워넣고, 타이머로 책을 읽을 수 있게 해주는 독서 기록 앱입니다. 
+
+## 읽기 - 원하는 독서 공간을 배경으로 책을 읽고, 시간을 기록하세요.
+원하는 감성의 독서 공간을 배경으로 두고, 원하는 책을 고르세요.
+책을 고르면 시작 버튼을 눌러 책을 읽는 동안의 시간을 기록할 수 있습니다.
+저장을 누르면 내가 어떤 책을 얼마나 읽었는지 기록으로 남겨둘 수 있고,
+책 덮기를 클릭하면 다른 책을 가져와서 읽을 수 있습니다.
+
+## 서재 - 내가 원하는 책으로 나만의 책장을 채워보세요.
+최대 10개의 책장을 만들고 한 책장에 20개의 책으로 채울 수 있습니다.
+원하는 책을 편하게 검색해서 책장에 등록해보세요.
+어떤 책이 있는지 검색해보는 재미도 있고, 나만의 서재를 만들어가는 재미도 느낄 수 있습니다.
+
+## 내 정보 - 저장된 기록을 보고 원하는대로 설정해보세요.
+내가 책을 얼마나 읽고 몇 권을 읽었는지 한 눈에 볼 수 있습니다.
+독서 기록을 통해 저장된 내용들을 볼 수도 있어요.
+또한 책을 읽을 때의 배경을 내가 원하는 느낌의 장소로 바꿔보세요.
 
 ---
 
-## 프로젝트 구조
+## 개발 정보
+
+### 주요 기능
+독서 타이머
+도서 검색
+독서 기록 통계
+배경 변경
+
+### 기술 스택
+- Framework: React 18 + Vite
+- Database: Firebase Firestore
+- 도서 검색: 카카오 도서 검색 API
+- 배포: GitHub Pages + GitHub Actions 활용하여 main에 커밋시 배포 자동화
+- 코드 생성 및 수정: Claude
+- 이미지 생성: Nano Banana 2
+
+### 프로젝트 구조
 
 ```
 reading-app/
@@ -42,33 +75,7 @@ reading-app/
 └── vite.config.js
 ```
 
----
-
-## 1단계 — 로컬 세팅
-
-### 의존성 설치
-```bash
-npm install
-```
-
-### Firebase 설정
-
-1. [Firebase Console](https://console.firebase.google.com) → 프로젝트 선택
-2. **프로젝트 설정 > 일반 > 내 앱** 에서 웹 앱 추가 후 config 복사
-3. `.env.local` 파일에 값 입력:
-
-```env
-VITE_FIREBASE_API_KEY=AIza...
-VITE_FIREBASE_AUTH_DOMAIN=your-project.firebaseapp.com
-VITE_FIREBASE_PROJECT_ID=your-project-id
-VITE_FIREBASE_STORAGE_BUCKET=your-project.appspot.com
-VITE_FIREBASE_MESSAGING_SENDER_ID=123456789
-VITE_FIREBASE_APP_ID=1:123:web:abc
-```
-
-4. Firebase Console → **Firestore Database** → 데이터베이스 만들기 (테스트 모드로 시작)
-
-### Firestore 보안 규칙 (개발용)
+### Firestore 보안 규칙 
 ```
 rules_version = '2';
 service cloud.firestore {
@@ -82,99 +89,21 @@ service cloud.firestore {
 
 > 프로덕션 배포 시 인증 기반 규칙으로 교체 필요
 
-### 배경 이미지 넣기
+### 커스터마이징 포인트
+
+| 항목 | 위치 |
+|------|------|
+| 배경 이미지 목록 | `src/pages/MyPage.jsx` → `BG_IMAGES` |
+| 책장 최대 개수 | `src/utils/firestore.js` → `limit(10)` |
+| 책 최대 개수 | `src/utils/firestore.js` → `limit(20)` |
+
+- 이미지 경로(권장 사이즈: 1920×1080 이상)
 ```
 public/images/bg1.jpg
 public/images/bg2.jpg
 public/images/bg3.jpg
 public/images/bg4.jpg
 public/images/bg5.jpg
-```
-- 권장 사이즈: 1920×1080 이상
-- `src/pages/MyPage.jsx`의 `BG_IMAGES` 배열에서 파일명 수정 가능
-
-### 로컬 실행
-```bash
-npm run dev
-# → http://localhost:5173 에서 확인
-```
-
----
-
-## 2단계 — GitHub Pages 배포
-
-### 준비
-```bash
-# GitHub에 레포지토리 생성 후 (예: reading-app)
-git init
-git remote add origin https://github.com/<USERNAME>/<REPO_NAME>.git
-```
-
-### vite.config.js 수정
-```js
-export default defineConfig({
-  plugins: [react()],
-  base: '/<REPO_NAME>/',  // 실제 레포 이름으로 교체
-})
-```
-
-### package.json homepage 수정
-```json
-"homepage": "https://<USERNAME>.github.io/<REPO_NAME>"
-```
-
-### Firebase 환경변수 — GitHub Secrets 설정
-
-> `.env.local`은 git에 올라가지 않으므로 GitHub Actions에 Secrets로 등록
-
-1. GitHub 레포 → **Settings > Secrets and variables > Actions**
-2. 아래 항목 각각 추가:
-   - `VITE_FIREBASE_API_KEY`
-   - `VITE_FIREBASE_AUTH_DOMAIN`
-   - `VITE_FIREBASE_PROJECT_ID`
-   - `VITE_FIREBASE_STORAGE_BUCKET`
-   - `VITE_FIREBASE_MESSAGING_SENDER_ID`
-   - `VITE_FIREBASE_APP_ID`
-
-### GitHub Actions 워크플로우 생성
-`.github/workflows/deploy.yml` 파일 생성:
-
-```yaml
-name: Deploy to GitHub Pages
-
-on:
-  push:
-    branches: [main]
-
-jobs:
-  deploy:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-
-      - name: Setup Node
-        uses: actions/setup-node@v4
-        with:
-          node-version: 20
-
-      - name: Install dependencies
-        run: npm install
-
-      - name: Build
-        env:
-          VITE_FIREBASE_API_KEY: ${{ secrets.VITE_FIREBASE_API_KEY }}
-          VITE_FIREBASE_AUTH_DOMAIN: ${{ secrets.VITE_FIREBASE_AUTH_DOMAIN }}
-          VITE_FIREBASE_PROJECT_ID: ${{ secrets.VITE_FIREBASE_PROJECT_ID }}
-          VITE_FIREBASE_STORAGE_BUCKET: ${{ secrets.VITE_FIREBASE_STORAGE_BUCKET }}
-          VITE_FIREBASE_MESSAGING_SENDER_ID: ${{ secrets.VITE_FIREBASE_MESSAGING_SENDER_ID }}
-          VITE_FIREBASE_APP_ID: ${{ secrets.VITE_FIREBASE_APP_ID }}
-        run: npm run build
-
-      - name: Deploy
-        uses: peaceiris/actions-gh-pages@v4
-        with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: ./dist
 ```
 
 ### 수동 배포 (Actions 없이)
@@ -194,47 +123,6 @@ npm run deploy
 1. Firebase Console → **Authentication > Settings > Authorized domains**
 2. `<USERNAME>.github.io` 추가
 
----
-
-## 3단계 — SPA 라우팅 처리 (중요!)
-
-gh-pages에서 React Router 새로고침 시 404가 발생합니다.  
-`public/404.html`을 만들어 해결:
-
-```html
-<!DOCTYPE html>
-<html>
-<head>
-  <meta charset="utf-8">
-  <script>
-    var l = window.location;
-    l.replace(
-      l.protocol + '//' + l.host + l.pathname.split('/').slice(0, 1 + 1).join('/') +
-      '/?/' + l.pathname.slice(1) + l.search + l.hash
-    );
-  </script>
-</head>
-</html>
-```
-
-그리고 `index.html`의 `<head>`에 아래 스크립트 추가:
-
-```html
-<script>
-  (function(l) {
-    if (l.search[1] === '/') {
-      var decoded = l.search.slice(1).split('&').map(function(s) {
-        return s.replace(/~and~/g, '&')
-      }).join('?')
-      window.history.replaceState(null, null,
-        l.pathname.slice(0, -1) + decoded + l.hash
-      );
-    }
-  }(window.location))
-</script>
-```
-
----
 
 ## Firestore 데이터 구조
 
@@ -267,14 +155,3 @@ settings/
     bgImage: string
 ```
 
----
-
-## 커스터마이징 포인트
-
-| 항목 | 위치 |
-|------|------|
-| 배경 이미지 목록 | `src/pages/MyPage.jsx` → `BG_IMAGES` |
-| 색상 테마 | `src/styles/global.css` → `:root` |
-| 폰트 | `src/styles/global.css` → Google Fonts import |
-| 책장 최대 개수 | `src/utils/firestore.js` → `limit(10)` |
-| 책 최대 개수 | `src/utils/firestore.js` → `limit(20)` |
