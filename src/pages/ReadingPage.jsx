@@ -120,33 +120,35 @@ const ReadingPage = () => {
           </button>
 
           {selectorOpen && (
-            <div className="list book-selector__dropdown">
+            <div className="book-selector__dropdown">
               {allBooks.length === 0 && (
                 <div style={{ padding: '1rem', color: 'var(--gray-500)', fontSize: '0.8rem', textAlign: 'center' }}>
                   서재에 책이 없습니다
                 </div>
               )}
-              {allBooks.map(book => (
-                <div
-                  key={book.id}
-                  className={`list-item ${activeBook?.id === book.id ? 'selected' : ''}`}
-                  onClick={() => {
-                    setActiveBook(book)
-                    setSelectorOpen(false)
-                    reset()
-                  }}
-                >
-                  {book.coverUrl ? (
-                    <img src={book.coverUrl} alt="" className="list-item__thumb" />
-                  ) : (
-                    <div className="list-item__thumb" style={{ display:'flex', alignItems:'center', justifyContent:'center', fontSize:'1.2rem' }}>📖</div>
-                  )}
-                  <div className="list-item__info">
-                    <div className="list-item__title">{book.title}</div>
-                    <div className="list-item__description">{book.shelfName}</div>
-                  </div>
-                </div>
-              ))}
+              {<ul className='list'>
+                {allBooks.map(book => (
+                  <li
+                    key={book.id}
+                    className={`list-item ${activeBook?.id === book.id ? 'selected' : ''}`}
+                    onClick={() => {
+                      setActiveBook(book)
+                      setSelectorOpen(false)
+                      reset()
+                    }}
+                  >
+                    {book.coverUrl ? (
+                      <img src={book.coverUrl} alt="" className="list-item__thumb" />
+                    ) : (
+                      <div className="list-item__thumb" style={{ display:'flex', alignItems:'center', justifyContent:'center', fontSize:'1.2rem' }}>📖</div>
+                    )}
+                    <div className="list-item__info">
+                      <div className="list-item__title">{book.title}</div>
+                      <div className="list-item__description">{book.shelfName}</div>
+                    </div>
+                  </li>
+                ))}
+              </ul>}
             </div>
           )}
         </div>

@@ -50,6 +50,7 @@
 }
 
 .timer-card__book-img{
+  flex:none;
   width: 48px;
   object-fit: cover;
   box-shadow: 0 4px 12px rgba(0,0,0,0.3);
@@ -164,16 +165,19 @@
   top: calc(100% + 8px);
   left: 0; right: 0;
   max-height: 260px;
+  padding:0 8px;
   animation: fadeIn 0.2s ease;
-}
-.book-selector__dropdown.list{
-  /* background: var(--glass-bg); */
-  background: var(--bg);
   border-radius: var(--radius-lg);
-  border: 1px solid var(--glass-border);
-  backdrop-filter: var(--glass-blur);
-  -webkit-backdrop-filter: var(--glass-blur);
-  box-shadow: var(--glass-shadow);  
+  background: var(--bg);
+  overflow: hidden;
+}
+.book-selector__dropdown .list{
+  /* background: var(--glass-bg); */
+  height:260px;
+  margin-right: -4px;
+  border: 0 none;
+  border-radius: 0;
+  overflow-y: scroll;
 }
 /* .book-selector__dropdown.list .list-item{
   border-bottom: 1px solid var(--border-color);

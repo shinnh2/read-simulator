@@ -132,9 +132,18 @@ img {
 }
 
 /* ─── Scrollbar ─────────────────────────── */
-::-webkit-scrollbar { width: 4px; }
-::-webkit-scrollbar-track { background: var(--gray-300); }
-::-webkit-scrollbar-thumb { background: var(--gray-400); border-radius: 2px; }
+*::-webkit-scrollbar {
+  width: 4px;
+}
+
+*::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+*::-webkit-scrollbar-thumb {
+  background-color: var(--gray-400);
+  border-radius: var(--radius-lg);
+} 
 
 /* ─── Utility ───────────────────────────── */
 .sr-only {
